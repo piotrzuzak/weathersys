@@ -1,0 +1,655 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="weatherModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="DayTemperatures">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="day_temp" Type="int" Nullable="false" />
+          <Property Name="day_min" Type="int" />
+          <Property Name="day_max" Type="int" />
+          <Property Name="day_eve" Type="int" />
+          <Property Name="day_morn" Type="int" />
+          <Property Name="real_feel_day" Type="int" />
+          <Property Name="real_feel_night" Type="int" />
+          <Property Name="night_temp" Type="int" />
+          <Property Name="rowDatetime" Type="datetime2" Precision="7" />
+        </EntityType>
+        <EntityType Name="Locations">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Location_Name" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Latitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="Longitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Profiles_Settings">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="user_id" Type="int" Nullable="false" />
+          <Property Name="sources_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Sources">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name_WeatherSource" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User_Locations">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="settings_id" Type="int" Nullable="false" />
+          <Property Name="locations_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Login" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Weather_Days">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="sources_id" Type="int" Nullable="false" />
+          <Property Name="locations_id" Type="int" Nullable="false" />
+          <Property Name="weather_date" Type="datetime2" Precision="7" />
+          <Property Name="rain" Type="decimal" Precision="6" Scale="3" />
+          <Property Name="wind_speed" Type="int" />
+          <Property Name="wind_degree" Type="int" />
+          <Property Name="pressure" Type="decimal" Precision="8" Scale="4" />
+          <Property Name="humidity" Type="int" />
+          <Property Name="clouds_range" Type="decimal" Precision="10" Scale="5" />
+          <Property Name="temperature_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Weather_Descriptions">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="150" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Weather_Hours">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="weather_days_id" Type="int" Nullable="false" />
+          <Property Name="weather_date" Type="datetime2" Precision="7" />
+          <Property Name="temperature" Type="int" />
+          <Property Name="weather_descriptions_id" Type="int" />
+          <Property Name="real_feel_temperature" Type="int" />
+          <Property Name="rain" Type="decimal" Precision="6" Scale="3" />
+          <Property Name="wind" Type="int" />
+          <Property Name="pressure" Type="int" />
+        </EntityType>
+        <Association Name="FK_Profiles_Settings_0">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Profiles_Settings" Type="Self.Profiles_Settings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Profiles_Settings">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Profiles_Settings_1">
+          <End Role="Sources" Type="Self.Sources" Multiplicity="1" />
+          <End Role="Profiles_Settings" Type="Self.Profiles_Settings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sources">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Profiles_Settings">
+              <PropertyRef Name="sources_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Locations_0">
+          <End Role="Profiles_Settings" Type="Self.Profiles_Settings" Multiplicity="1" />
+          <End Role="User_Locations" Type="Self.User_Locations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Profiles_Settings">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="User_Locations">
+              <PropertyRef Name="settings_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Locations_1">
+          <End Role="Locations" Type="Self.Locations" Multiplicity="1" />
+          <End Role="User_Locations" Type="Self.User_Locations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Locations">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="User_Locations">
+              <PropertyRef Name="locations_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Weather_Days_0">
+          <End Role="Sources" Type="Self.Sources" Multiplicity="1" />
+          <End Role="Weather_Days" Type="Self.Weather_Days" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sources">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Weather_Days">
+              <PropertyRef Name="sources_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Weather_Days_1">
+          <End Role="DayTemperatures" Type="Self.DayTemperatures" Multiplicity="1" />
+          <End Role="Weather_Days" Type="Self.Weather_Days" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DayTemperatures">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Weather_Days">
+              <PropertyRef Name="temperature_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Weather_Days_3">
+          <End Role="Locations" Type="Self.Locations" Multiplicity="1" />
+          <End Role="Weather_Days" Type="Self.Weather_Days" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Locations">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Weather_Days">
+              <PropertyRef Name="locations_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Weather_Hours_0">
+          <End Role="Weather_Descriptions" Type="Self.Weather_Descriptions" Multiplicity="0..1" />
+          <End Role="Weather_Hours" Type="Self.Weather_Hours" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Weather_Descriptions">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Weather_Hours">
+              <PropertyRef Name="weather_descriptions_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Weather_Hours_1">
+          <End Role="Weather_Days" Type="Self.Weather_Days" Multiplicity="1" />
+          <End Role="Weather_Hours" Type="Self.Weather_Hours" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Weather_Days">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Weather_Hours">
+              <PropertyRef Name="weather_days_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="weatherModelStoreContainer">
+          <EntitySet Name="DayTemperatures" EntityType="Self.DayTemperatures" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Locations" EntityType="Self.Locations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Profiles_Settings" EntityType="Self.Profiles_Settings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sources" EntityType="Self.Sources" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User_Locations" EntityType="Self.User_Locations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Weather_Days" EntityType="Self.Weather_Days" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Weather_Descriptions" EntityType="Self.Weather_Descriptions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Weather_Hours" EntityType="Self.Weather_Hours" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Profiles_Settings_0" Association="Self.FK_Profiles_Settings_0">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Profiles_Settings" EntitySet="Profiles_Settings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Profiles_Settings_1" Association="Self.FK_Profiles_Settings_1">
+            <End Role="Sources" EntitySet="Sources" />
+            <End Role="Profiles_Settings" EntitySet="Profiles_Settings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Locations_0" Association="Self.FK_User_Locations_0">
+            <End Role="Profiles_Settings" EntitySet="Profiles_Settings" />
+            <End Role="User_Locations" EntitySet="User_Locations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Locations_1" Association="Self.FK_User_Locations_1">
+            <End Role="Locations" EntitySet="Locations" />
+            <End Role="User_Locations" EntitySet="User_Locations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Weather_Days_0" Association="Self.FK_Weather_Days_0">
+            <End Role="Sources" EntitySet="Sources" />
+            <End Role="Weather_Days" EntitySet="Weather_Days" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Weather_Days_1" Association="Self.FK_Weather_Days_1">
+            <End Role="DayTemperatures" EntitySet="DayTemperatures" />
+            <End Role="Weather_Days" EntitySet="Weather_Days" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Weather_Days_3" Association="Self.FK_Weather_Days_3">
+            <End Role="Locations" EntitySet="Locations" />
+            <End Role="Weather_Days" EntitySet="Weather_Days" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Weather_Hours_0" Association="Self.FK_Weather_Hours_0">
+            <End Role="Weather_Descriptions" EntitySet="Weather_Descriptions" />
+            <End Role="Weather_Hours" EntitySet="Weather_Hours" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Weather_Hours_1" Association="Self.FK_Weather_Hours_1">
+            <End Role="Weather_Days" EntitySet="Weather_Days" />
+            <End Role="Weather_Hours" EntitySet="Weather_Hours" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="weatherModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="DayTemperatures">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="day_temp" Type="Int32" Nullable="false" />
+          <Property Name="day_min" Type="Int32" />
+          <Property Name="day_max" Type="Int32" />
+          <Property Name="day_eve" Type="Int32" />
+          <Property Name="day_morn" Type="Int32" />
+          <Property Name="real_feel_day" Type="Int32" />
+          <Property Name="real_feel_night" Type="Int32" />
+          <Property Name="night_temp" Type="Int32" />
+          <Property Name="rowDatetime" Type="DateTime" Precision="7" />
+          <NavigationProperty Name="Weather_Days" Relationship="Self.FK_Weather_Days_1" FromRole="DayTemperatures" ToRole="Weather_Days" />
+        </EntityType>
+        <EntityType Name="Locations">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Location_Name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Latitude" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="Longitude" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
+          <NavigationProperty Name="User_Locations" Relationship="Self.FK_User_Locations_1" FromRole="Locations" ToRole="User_Locations" />
+          <NavigationProperty Name="Weather_Days" Relationship="Self.FK_Weather_Days_3" FromRole="Locations" ToRole="Weather_Days" />
+        </EntityType>
+        <EntityType Name="Profiles_Settings">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <Property Name="sources_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_Profiles_Settings_0" FromRole="Profiles_Settings" ToRole="Users" />
+          <NavigationProperty Name="Sources" Relationship="Self.FK_Profiles_Settings_1" FromRole="Profiles_Settings" ToRole="Sources" />
+          <NavigationProperty Name="User_Locations" Relationship="Self.FK_User_Locations_0" FromRole="Profiles_Settings" ToRole="User_Locations" />
+        </EntityType>
+        <EntityType Name="Sources">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name_WeatherSource" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Profiles_Settings" Relationship="Self.FK_Profiles_Settings_1" FromRole="Sources" ToRole="Profiles_Settings" />
+          <NavigationProperty Name="Weather_Days" Relationship="Self.FK_Weather_Days_0" FromRole="Sources" ToRole="Weather_Days" />
+        </EntityType>
+        <EntityType Name="User_Locations">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="settings_id" Type="Int32" Nullable="false" />
+          <Property Name="locations_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Locations" Relationship="Self.FK_User_Locations_1" FromRole="User_Locations" ToRole="Locations" />
+          <NavigationProperty Name="Profiles_Settings" Relationship="Self.FK_User_Locations_0" FromRole="User_Locations" ToRole="Profiles_Settings" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Profiles_Settings" Relationship="Self.FK_Profiles_Settings_0" FromRole="Users" ToRole="Profiles_Settings" />
+        </EntityType>
+        <EntityType Name="Weather_Days">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="sources_id" Type="Int32" Nullable="false" />
+          <Property Name="locations_id" Type="Int32" Nullable="false" />
+          <Property Name="weather_date" Type="DateTime" Precision="7" />
+          <Property Name="rain" Type="Decimal" Precision="6" Scale="3" />
+          <Property Name="wind_speed" Type="Int32" />
+          <Property Name="wind_degree" Type="Int32" />
+          <Property Name="pressure" Type="Decimal" Precision="8" Scale="4" />
+          <Property Name="humidity" Type="Int32" />
+          <Property Name="clouds_range" Type="Decimal" Precision="10" Scale="5" />
+          <Property Name="temperature_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DayTemperatures" Relationship="Self.FK_Weather_Days_1" FromRole="Weather_Days" ToRole="DayTemperatures" />
+          <NavigationProperty Name="Locations" Relationship="Self.FK_Weather_Days_3" FromRole="Weather_Days" ToRole="Locations" />
+          <NavigationProperty Name="Sources" Relationship="Self.FK_Weather_Days_0" FromRole="Weather_Days" ToRole="Sources" />
+          <NavigationProperty Name="Weather_Hours" Relationship="Self.FK_Weather_Hours_1" FromRole="Weather_Days" ToRole="Weather_Hours" />
+        </EntityType>
+        <EntityType Name="Weather_Descriptions">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Weather_Hours" Relationship="Self.FK_Weather_Hours_0" FromRole="Weather_Descriptions" ToRole="Weather_Hours" />
+        </EntityType>
+        <EntityType Name="Weather_Hours">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="weather_days_id" Type="Int32" Nullable="false" />
+          <Property Name="weather_date" Type="DateTime" Precision="7" />
+          <Property Name="temperature" Type="Int32" />
+          <Property Name="weather_descriptions_id" Type="Int32" />
+          <Property Name="real_feel_temperature" Type="Int32" />
+          <Property Name="rain" Type="Decimal" Precision="6" Scale="3" />
+          <Property Name="wind" Type="Int32" />
+          <Property Name="pressure" Type="Int32" />
+          <NavigationProperty Name="Weather_Days" Relationship="Self.FK_Weather_Hours_1" FromRole="Weather_Hours" ToRole="Weather_Days" />
+          <NavigationProperty Name="Weather_Descriptions" Relationship="Self.FK_Weather_Hours_0" FromRole="Weather_Hours" ToRole="Weather_Descriptions" />
+        </EntityType>
+        <Association Name="FK_Weather_Days_1">
+          <End Role="DayTemperatures" Type="Self.DayTemperatures" Multiplicity="1" />
+          <End Role="Weather_Days" Type="Self.Weather_Days" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DayTemperatures">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Weather_Days">
+              <PropertyRef Name="temperature_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Locations_1">
+          <End Role="Locations" Type="Self.Locations" Multiplicity="1" />
+          <End Role="User_Locations" Type="Self.User_Locations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Locations">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="User_Locations">
+              <PropertyRef Name="locations_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Weather_Days_3">
+          <End Role="Locations" Type="Self.Locations" Multiplicity="1" />
+          <End Role="Weather_Days" Type="Self.Weather_Days" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Locations">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Weather_Days">
+              <PropertyRef Name="locations_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Profiles_Settings_0">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Profiles_Settings" Type="Self.Profiles_Settings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Profiles_Settings">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Profiles_Settings_1">
+          <End Role="Sources" Type="Self.Sources" Multiplicity="1" />
+          <End Role="Profiles_Settings" Type="Self.Profiles_Settings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sources">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Profiles_Settings">
+              <PropertyRef Name="sources_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Locations_0">
+          <End Role="Profiles_Settings" Type="Self.Profiles_Settings" Multiplicity="1" />
+          <End Role="User_Locations" Type="Self.User_Locations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Profiles_Settings">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="User_Locations">
+              <PropertyRef Name="settings_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Weather_Days_0">
+          <End Role="Sources" Type="Self.Sources" Multiplicity="1" />
+          <End Role="Weather_Days" Type="Self.Weather_Days" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sources">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Weather_Days">
+              <PropertyRef Name="sources_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Weather_Hours_1">
+          <End Role="Weather_Days" Type="Self.Weather_Days" Multiplicity="1" />
+          <End Role="Weather_Hours" Type="Self.Weather_Hours" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Weather_Days">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Weather_Hours">
+              <PropertyRef Name="weather_days_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Weather_Hours_0">
+          <End Role="Weather_Descriptions" Type="Self.Weather_Descriptions" Multiplicity="0..1" />
+          <End Role="Weather_Hours" Type="Self.Weather_Hours" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Weather_Descriptions">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Weather_Hours">
+              <PropertyRef Name="weather_descriptions_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="weatherEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="DayTemperatures" EntityType="Self.DayTemperatures" />
+          <EntitySet Name="Locations" EntityType="Self.Locations" />
+          <EntitySet Name="Profiles_Settings" EntityType="Self.Profiles_Settings" />
+          <EntitySet Name="Sources" EntityType="Self.Sources" />
+          <EntitySet Name="User_Locations" EntityType="Self.User_Locations" />
+          <EntitySet Name="Users" EntityType="Self.Users" />
+          <EntitySet Name="Weather_Days" EntityType="Self.Weather_Days" />
+          <EntitySet Name="Weather_Descriptions" EntityType="Self.Weather_Descriptions" />
+          <EntitySet Name="Weather_Hours" EntityType="Self.Weather_Hours" />
+          <AssociationSet Name="FK_Weather_Days_1" Association="Self.FK_Weather_Days_1">
+            <End Role="DayTemperatures" EntitySet="DayTemperatures" />
+            <End Role="Weather_Days" EntitySet="Weather_Days" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Locations_1" Association="Self.FK_User_Locations_1">
+            <End Role="Locations" EntitySet="Locations" />
+            <End Role="User_Locations" EntitySet="User_Locations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Weather_Days_3" Association="Self.FK_Weather_Days_3">
+            <End Role="Locations" EntitySet="Locations" />
+            <End Role="Weather_Days" EntitySet="Weather_Days" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Profiles_Settings_0" Association="Self.FK_Profiles_Settings_0">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Profiles_Settings" EntitySet="Profiles_Settings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Profiles_Settings_1" Association="Self.FK_Profiles_Settings_1">
+            <End Role="Sources" EntitySet="Sources" />
+            <End Role="Profiles_Settings" EntitySet="Profiles_Settings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Locations_0" Association="Self.FK_User_Locations_0">
+            <End Role="Profiles_Settings" EntitySet="Profiles_Settings" />
+            <End Role="User_Locations" EntitySet="User_Locations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Weather_Days_0" Association="Self.FK_Weather_Days_0">
+            <End Role="Sources" EntitySet="Sources" />
+            <End Role="Weather_Days" EntitySet="Weather_Days" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Weather_Hours_1" Association="Self.FK_Weather_Hours_1">
+            <End Role="Weather_Days" EntitySet="Weather_Days" />
+            <End Role="Weather_Hours" EntitySet="Weather_Hours" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Weather_Hours_0" Association="Self.FK_Weather_Hours_0">
+            <End Role="Weather_Descriptions" EntitySet="Weather_Descriptions" />
+            <End Role="Weather_Hours" EntitySet="Weather_Hours" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="weatherModelStoreContainer" CdmEntityContainer="weatherEntities">
+          <EntitySetMapping Name="DayTemperatures">
+            <EntityTypeMapping TypeName="weatherModel.DayTemperatures">
+              <MappingFragment StoreEntitySet="DayTemperatures">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="day_temp" ColumnName="day_temp" />
+                <ScalarProperty Name="day_min" ColumnName="day_min" />
+                <ScalarProperty Name="day_max" ColumnName="day_max" />
+                <ScalarProperty Name="day_eve" ColumnName="day_eve" />
+                <ScalarProperty Name="day_morn" ColumnName="day_morn" />
+                <ScalarProperty Name="real_feel_day" ColumnName="real_feel_day" />
+                <ScalarProperty Name="real_feel_night" ColumnName="real_feel_night" />
+                <ScalarProperty Name="night_temp" ColumnName="night_temp" />
+                <ScalarProperty Name="rowDatetime" ColumnName="rowDatetime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Locations">
+            <EntityTypeMapping TypeName="weatherModel.Locations">
+              <MappingFragment StoreEntitySet="Locations">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Location_Name" ColumnName="Location_Name" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Profiles_Settings">
+            <EntityTypeMapping TypeName="weatherModel.Profiles_Settings">
+              <MappingFragment StoreEntitySet="Profiles_Settings">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="sources_id" ColumnName="sources_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sources">
+            <EntityTypeMapping TypeName="weatherModel.Sources">
+              <MappingFragment StoreEntitySet="Sources">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name_WeatherSource" ColumnName="Name_WeatherSource" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User_Locations">
+            <EntityTypeMapping TypeName="weatherModel.User_Locations">
+              <MappingFragment StoreEntitySet="User_Locations">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="settings_id" ColumnName="settings_id" />
+                <ScalarProperty Name="locations_id" ColumnName="locations_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="weatherModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Weather_Days">
+            <EntityTypeMapping TypeName="weatherModel.Weather_Days">
+              <MappingFragment StoreEntitySet="Weather_Days">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="sources_id" ColumnName="sources_id" />
+                <ScalarProperty Name="locations_id" ColumnName="locations_id" />
+                <ScalarProperty Name="weather_date" ColumnName="weather_date" />
+                <ScalarProperty Name="rain" ColumnName="rain" />
+                <ScalarProperty Name="wind_speed" ColumnName="wind_speed" />
+                <ScalarProperty Name="wind_degree" ColumnName="wind_degree" />
+                <ScalarProperty Name="pressure" ColumnName="pressure" />
+                <ScalarProperty Name="humidity" ColumnName="humidity" />
+                <ScalarProperty Name="clouds_range" ColumnName="clouds_range" />
+                <ScalarProperty Name="temperature_id" ColumnName="temperature_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Weather_Descriptions">
+            <EntityTypeMapping TypeName="weatherModel.Weather_Descriptions">
+              <MappingFragment StoreEntitySet="Weather_Descriptions">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Weather_Hours">
+            <EntityTypeMapping TypeName="weatherModel.Weather_Hours">
+              <MappingFragment StoreEntitySet="Weather_Hours">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="weather_days_id" ColumnName="weather_days_id" />
+                <ScalarProperty Name="weather_date" ColumnName="weather_date" />
+                <ScalarProperty Name="temperature" ColumnName="temperature" />
+                <ScalarProperty Name="weather_descriptions_id" ColumnName="weather_descriptions_id" />
+                <ScalarProperty Name="real_feel_temperature" ColumnName="real_feel_temperature" />
+                <ScalarProperty Name="rain" ColumnName="rain" />
+                <ScalarProperty Name="wind" ColumnName="wind" />
+                <ScalarProperty Name="pressure" ColumnName="pressure" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

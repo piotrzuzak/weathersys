@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="acbe694bfe5942238a57b55a67f49992" Name="Diagram1">
+        <EntityTypeShape EntityType="weatherModel.DayTemperatures" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="weatherModel.Locations" Width="1.5" PointX="0.75" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="weatherModel.Profiles_Settings" Width="1.5" PointX="0.75" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="weatherModel.Sources" Width="1.5" PointX="1.5" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="weatherModel.User_Locations" Width="1.5" PointX="3" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="weatherModel.Users" Width="1.5" PointX="1.5" PointY="12.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="weatherModel.Weather_Days" Width="1.5" PointX="6" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="weatherModel.Weather_Descriptions" Width="1.5" PointX="6" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="weatherModel.Weather_Hours" Width="1.5" PointX="8.25" PointY="4.75" IsExpanded="true" />
+        <AssociationConnector Association="weatherModel.FK_Weather_Days_1" ManuallyRouted="false" />
+        <AssociationConnector Association="weatherModel.FK_User_Locations_1" ManuallyRouted="false" />
+        <AssociationConnector Association="weatherModel.FK_Weather_Days_3" ManuallyRouted="false" />
+        <AssociationConnector Association="weatherModel.FK_Profiles_Settings_0" ManuallyRouted="false" />
+        <AssociationConnector Association="weatherModel.FK_Profiles_Settings_1" ManuallyRouted="false" />
+        <AssociationConnector Association="weatherModel.FK_User_Locations_0" ManuallyRouted="false" />
+        <AssociationConnector Association="weatherModel.FK_Weather_Days_0" ManuallyRouted="false" />
+        <AssociationConnector Association="weatherModel.FK_Weather_Hours_1" ManuallyRouted="false" />
+        <AssociationConnector Association="weatherModel.FK_Weather_Hours_0" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
